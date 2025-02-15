@@ -1,11 +1,10 @@
 import Image from "next/image";
-
 import appPreviewImage from "../assets/app-preview.png";
-import { Button } from "@/components/ui/button";
+import { UserNameForm } from "@/components/user-name-form/user-name-form";
 
 export default function Home() {
 	return (
-		<div className="bg-zinc-950 text-white">
+		<div className="bg-gray-900 text-white">
 			<div
 				className="flex p-0 max-w-[calc(100vw-((100vw-1160px)/2))] ml-auto h-screen
 			gap-20 items-center"
@@ -20,9 +19,7 @@ export default function Home() {
 						no seu tempo livre.
 					</p>
 
-					<Button className="bg-red-600 hover:bg-red-700 max-w-max">
-						Criar conta com Google
-					</Button>
+					<UserNameForm />
 				</div>
 
 				<div className="hidden md:block">
