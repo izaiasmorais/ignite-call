@@ -1,5 +1,4 @@
 "use client";
-
 import {
 	Form,
 	FormControl,
@@ -8,33 +7,12 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { toast } from "sonner";
-import { useFormMutation } from "@/hooks/use-form-mutation";
-import { z } from "zod";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
-
-const UserNameSchema = z.object({
-	username: z
-		.string()
-		.min(3, "O usuário deve ter no mínimo 3 caracteres")
-		.regex(/^([a-z\\-]+)$/i, "Digite um usuário válido")
-		.transform((username) => username.toLowerCase()),
-});
+import { ArrowRight, LoaderCircle } from "lucide-react";
+import { useUserNameForm } from "@/hooks/use-user-name-form";
 
 export function UserNameForm() {
-	const router=  useRouter()
-
-	const form = useFormMutation({
-		schema: UserNameSchema,
-		defaultValues: {
-			username: "",
-		},
-		onSubmit: async ({ username }) => {
-			toast.success(username);
-		},
-	});
+	const { form } = useUserNameForm();
 
 	return (
 		<Form {...form}>
@@ -61,12 +39,20 @@ export function UserNameForm() {
 				/>
 
 				<Button
-					onClick={() => router.push('/registro')}
 					type="submit"
 					className="bg-ignite-500 hover:bg-ignite-600 flex items-center gap-2 font-semibold"
+					disabled={form.formState.isSubmitting}
 				>
-					Submit
-					<ArrowRight />
+					{form.formState.isSubmitting && (
+						<LoaderCircle className="animate-spin" />
+					)}
+
+					{!form.formState.isSubmitting && (
+						<>
+							Avançar
+							<ArrowRight />
+						</>
+					)}
 				</Button>
 			</form>
 		</Form>

@@ -19,19 +19,14 @@ export function useFormMutation<TSchema extends FieldValues>({
 		resolver: zodResolver(schema),
 	});
 
-	const handleSubmitForm = form.handleSubmit(
-		(data) => {
-			try {
-				onSubmit(data);
-			} catch (error) {
-				toast.error("Ocorreu um erro ao processar a requisição");
-			}
-		},
-		(errors) => {
-			const firstError = Object.values(errors)[0]?.message;
-			if (firstError) toast.error(firstError.toString());
+	const handleSubmitForm = form.handleSubmit((data) => {
+		try {
+			onSubmit(data);
+		} catch (error) {
+			toast.error("Ocorreu um erro ao processar a requisição");
+			throw error;
 		}
-	);
+	});
 
 	return { ...form, handleSubmitForm };
 }

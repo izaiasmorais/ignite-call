@@ -1,5 +1,4 @@
 "use client";
-
 import {
 	Form,
 	FormControl,
@@ -9,37 +8,23 @@ import {
 	FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { useFormMutation } from "@/hooks/use-form-mutation";
 import { Button } from "@/components/ui/button";
 import { ArrowRight } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { z } from "zod";
-
-const RegisterUserSchema = z.object({
-	username: z
-		.string()
-		.min(3, "O usuário deve ter no mínimo 3 caracteres")
-		.regex(/^([a-z\\-]+)$/i, "Digite um usuário válido")
-		.transform((username) => username.toLowerCase()),
-	name: z
-		.string()
-		.min(3, "O nome deve ter no mínimo 3 caracteres")
-		.regex(/^([a-z\\-]+)$/i, "Digite um usuário válido"),
-});
+import { useRouter, useSearchParams } from "next/navigation";
+import { useEffect } from "react";
+import { useWelcomeForm } from "@/hooks/use-welcom-form";
 
 export function WelcomeForm() {
 	const router = useRouter();
+	const searchParams = useSearchParams();
+	const { form } = useWelcomeForm();
 
-	const form = useFormMutation({
-		schema: RegisterUserSchema,
-		defaultValues: {
-			username: "",
-			name: "",
-		},
-		onSubmit: async ({ username }) => {
-			console.log(username);
-		},
-	});
+	useEffect(() => {
+		const usernameFromQuery = searchParams.get("username");
+		if (usernameFromQuery) {
+			form.setValue("username", usernameFromQuery);
+		}
+	}, [searchParams]);
 
 	return (
 		<Form {...form}>

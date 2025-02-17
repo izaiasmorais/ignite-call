@@ -1,6 +1,6 @@
 import Image from "next/image";
 import appPreviewImage from "../assets/app-preview.png";
-import { UserNameForm } from "@/components/user-name-form/user-name-form";
+import { UserNameForm } from "@/components/forms/user-name-form";
 
 export default function Home() {
 	return (
