@@ -9,15 +9,14 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { ArrowRight, LoaderCircle } from "lucide-react";
+import { useSearchParams } from "next/navigation";
 import { useEffect } from "react";
-import { useWelcomeForm } from "@/hooks/use-welcom-form";
+import { useRegisterUser } from "@/hooks/use-register-user";
 
 export function WelcomeForm() {
-	const router = useRouter();
 	const searchParams = useSearchParams();
-	const { form } = useWelcomeForm();
+	const { form, isLoadingRegisterUser } = useRegisterUser();
 
 	useEffect(() => {
 		const usernameFromQuery = searchParams.get("username");
@@ -71,12 +70,16 @@ export function WelcomeForm() {
 				/>
 
 				<Button
-					onClick={() => router.push("/registro")}
 					type="submit"
 					className="bg-ignite-500 hover:bg-ignite-600 flex items-center gap-2 font-semibold w-full"
 				>
-					Avançar
-					<ArrowRight />
+					{isLoadingRegisterUser && <LoaderCircle className="animate-spin" />}
+
+					{!isLoadingRegisterUser && (
+						<>
+							Avançar <ArrowRight />
+						</>
+					)}
 				</Button>
 			</form>
 		</Form>
