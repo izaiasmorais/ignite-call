@@ -1,21 +1,30 @@
+import { HTTPErrorResponse, HTTPSucessResponse } from "@/@types/http";
+import { AxiosError } from "axios";
 import { api } from "@/lib/axios";
 
-export interface RegisterUserRequestBody {
-	username: string;
+type RegisterUserRequestBody = {
 	name: string;
-}
-
-export interface RegisterUserResponseBody {
 	username: string;
-	name: string;
-}
+};
 
-export async function registerUser(data: RegisterUserRequestBody) {
+type RegisterUserResponse = HTTPSucessResponse<null> | HTTPErrorResponse;
+
+export async function registerUser(
+	data: RegisterUserRequestBody
+): Promise<RegisterUserResponse> {
 	try {
-		const response = await api.post("/users", data);
+		const response = await api.post<HTTPSucessResponse<null>>("/users", data);
 
 		return response.data;
 	} catch (error) {
-		throw error;
+		if (error instanceof AxiosError && error.response?.data) {
+			return error.response.data;
+		}
+
+		return {
+			success: false,
+			error: "Erro desconhecido",
+			data: null,
+		};
 	}
 }

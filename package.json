@@ -7,9 +7,9 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-		"migrate": "prisma migrate dev",
-		"generate": "prisma generate",
-		"studio": "pnpm prisma studio -b chrome -p 5174"
+    "migrate": "prisma migrate dev",
+    "generate": "prisma generate",
+    "studio": "pnpm prisma studio -b chrome -p 5174"
   },
   "dependencies": {
     "@hookform/resolvers": "^4.1.0",

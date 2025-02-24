@@ -1,6 +1,7 @@
 import { registerUserSchema } from "@/hooks/use-register-user";
 import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 
 export const response = {
 	status(code: number) {
@@ -10,7 +11,7 @@ export const response = {
 	},
 };
 
-export async function POST(req: Request) {
+export async function POST(req: Request, res: Response) {
 	try {
 		const { name, username } = registerUserSchema.parse(await req.json());
 
@@ -23,16 +24,25 @@ export async function POST(req: Request) {
 		if (isUserAlreadyRegistered) {
 			return response.status(400).json({
 				success: false,
-				error: "Invalid Credentials",
+				error: "User Already Registered",
 				data: null,
 			});
 		}
 
-		await prisma.user.create({
+		const user = await prisma.user.create({
 			data: {
 				name,
 				username,
 			},
+		});
+
+		const cookieStore = await cookies();
+
+		cookieStore.set({
+			name: "@ingitecall:userId",
+			value: user.id,
+			path: "/",
+			maxAge: 60 * 60 * 24 * 7, // 7 days
 		});
 
 		return response.status(201).json({

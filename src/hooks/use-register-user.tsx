@@ -2,6 +2,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useFormMutation } from "./use-form-mutation";
 import { registerUser } from "@/api/users/register-user";
 import { z } from "zod";
+import { toast } from "sonner";
 
 export const registerUserSchema = z.object({
 	username: z
@@ -19,6 +20,14 @@ export function useRegisterUser() {
 			mutationKey: ["register-user"],
 			onSuccess: (data) => {
 				console.log(data);
+
+				if (data.success) {
+					toast.success("Usuário cadastrado com sucesso");
+				}
+
+				if (data.error === "User Already Registered") {
+					toast.error("Usuário já cadastrado");
+				}
 			},
 		});
 
