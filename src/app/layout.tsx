@@ -25,7 +25,10 @@ export default function RootLayout({
 				<link rel="icon" href="/favicon.ico" sizes="any" />
 			</head>
 
-			<body className={`${geistSans.className} antialiased`}>
+			<body
+				className={`${geistSans.className} antialiased`}
+				suppressHydrationWarning
+			>
 				<Providers>{children}</Providers>
 			</body>
 		</html>

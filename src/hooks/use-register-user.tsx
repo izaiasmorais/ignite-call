@@ -1,8 +1,10 @@
+"use client";
 import { useMutation } from "@tanstack/react-query";
 import { useFormMutation } from "./use-form-mutation";
 import { registerUser } from "@/api/users/register-user";
 import { z } from "zod";
 import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 export const registerUserSchema = z.object({
 	username: z
@@ -14,15 +16,15 @@ export const registerUserSchema = z.object({
 });
 
 export function useRegisterUser() {
+	const router = useRouter();
+
 	const { mutate: registerUserFn, isPending: isLoadingRegisterUser } =
 		useMutation({
 			mutationFn: registerUser,
 			mutationKey: ["register-user"],
 			onSuccess: (data) => {
-				console.log(data);
-
 				if (data.success) {
-					toast.success("Usuário cadastrado com sucesso");
+					router.push("/registro/conectar-calendario");
 				}
 
 				if (data.error === "User Already Registered") {

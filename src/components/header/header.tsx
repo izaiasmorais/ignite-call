@@ -8,7 +8,7 @@ interface HeaderProps {
 
 export function Header({ currentStep, title, description }: HeaderProps) {
 	return (
-		<header className="flex flex-col gap-4">
+		<header className="flex flex-col gap-6">
 			<div className="flex flex-col">
 				<strong className="text-2xl">{title}</strong>
 				<span className="text-gray-200">{description}</span>
