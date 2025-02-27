@@ -2,7 +2,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ZodType } from "zod";
 import { toast } from "sonner";
-import { useForm, type DefaultValues, type FieldValues } from "react-hook-form";
+import { useForm, DefaultValues, FieldValues } from "react-hook-form";
 
 interface UseFormMutationProps<TSchema extends FieldValues> {
 	schema: ZodType<TSchema>;

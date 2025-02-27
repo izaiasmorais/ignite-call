@@ -1,58 +1,22 @@
 "use client";
-import { useForm, Controller } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller } from "react-hook-form";
 import { Checkbox } from "@/components/ui/checkbox";
-import { Form, FormLabel } from "@/components/ui/form";
+import { Form, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "../ui/input";
 import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
-import { z } from "zod";
-
-const weekdays = [
-	{ id: 0, label: "Segunda-feira" },
-	{ id: 1, label: "Terça-feira" },
-	{ id: 2, label: "Quarta-feira" },
-	{ id: 3, label: "Quinta-feira" },
-	{ id: 4, label: "Sexta-feira" },
-	{ id: 5, label: "Sábado" },
-	{ id: 6, label: "Domingo" },
-];
-
-const FormSchema = z.object({
-	schedule: z.array(
-		z.object({
-			day: z.number(),
-			enabled: z.boolean(),
-			startTime: z.string(),
-			endTime: z.string(),
-		})
-	),
-});
+import { useScheduleForm } from "@/hooks/use-schedule-form";
 
 export default function CheckboxTimeRange() {
-	const form = useForm<z.infer<typeof FormSchema>>({
-		resolver: zodResolver(FormSchema),
-		defaultValues: {
-			schedule: weekdays.map((day) => ({
-				day: day.id,
-				enabled: [0, 1, 2, 3, 4, 5, 6].includes(day.id),
-				startTime: "08:00",
-				endTime: "18:00",
-			})),
-		},
-	});
-
-	function onSubmit(data: z.infer<typeof FormSchema>) {
-		console.log(data);
-	}
+	const { form, weekdays } = useScheduleForm();
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-4 w-full">
+			<form onSubmit={form.handleSubmitForm} className="space-y-4 w-full">
 				<div className="border border-gray-600 rounded-lg overflow-hidden">
 					{form.getValues().schedule.map((schedule, index) => (
 						<div
-							key={schedule.day}
+							key={schedule.weekday}
 							className="flex justify-between items-center space-x-4 px-4 py-2
 								bg-gray-800 border-b border-gray-600"
 						>
@@ -62,9 +26,12 @@ export default function CheckboxTimeRange() {
 								render={({ field }) => (
 									<div className="flex items-center space-x-2">
 										<Checkbox
-											id={String(schedule.day)}
+											id={String(schedule.weekday)}
 											checked={field.value}
-											onCheckedChange={field.onChange}
+											onCheckedChange={(e) => [
+												field.onChange(e),
+												form.clearErrors(),
+											]}
 											className={
 												field.value
 													? "!bg-ignite-500 border-ignite-500 text-white w-5 h-5"
@@ -73,12 +40,15 @@ export default function CheckboxTimeRange() {
 										/>
 
 										<FormLabel
-											htmlFor={String(schedule.day)}
+											htmlFor={String(schedule.weekday)}
 											className={`text-base font-medium ${
 												field.value ? "text-white" : "text-gray-400"
 											}`}
 										>
-											{weekdays.find((day) => day.id === schedule.day)?.label}
+											{
+												weekdays.find((day) => day.id === schedule.weekday)
+													?.label
+											}
 										</FormLabel>
 									</div>
 								)}
@@ -93,6 +63,7 @@ export default function CheckboxTimeRange() {
 											type="time"
 											{...field}
 											step={60}
+											disabled={!schedule.enabled}
 											className="p-2 rounded-md text-center bg-gray-900
 											time-white text-white border border-gray-800"
 										/>
@@ -104,9 +75,10 @@ export default function CheckboxTimeRange() {
 									control={form.control}
 									render={({ field }) => (
 										<Input
-											type="time"
 											{...field}
+											type="time"
 											step={60}
+											disabled={!schedule.enabled}
 											className="p-2 rounded-md text-center bg-gray-900
 											time-white text-white border border-gray-800"
 										/>
@@ -117,7 +89,19 @@ export default function CheckboxTimeRange() {
 					))}
 				</div>
 
-				<Button className="bg-ignite-500 hover:bg-ignite-600 w-full">
+				{form.formState.errors.schedule && (
+					<span className="text-red-500 block">
+						{form.formState.errors.schedule.root?.message}
+					</span>
+				)}
+
+				<FormMessage />
+
+				<Button
+					type="submit"
+					className="bg-ignite-500 hover:bg-ignite-600 w-full"
+					disabled={form.formState.isSubmitting}
+				>
 					Próximo Passo <ArrowRight />
 				</Button>
 			</form>

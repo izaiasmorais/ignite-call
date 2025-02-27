@@ -45,6 +45,7 @@ export function WelcomeForm() {
 									{...field}
 								/>
 							</FormControl>
+
 							<FormMessage />
 						</FormItem>
 					)}
@@ -64,6 +65,7 @@ export function WelcomeForm() {
 									{...field}
 								/>
 							</FormControl>
+							
 							<FormMessage />
 						</FormItem>
 					)}
