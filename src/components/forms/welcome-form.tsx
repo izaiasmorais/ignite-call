@@ -23,7 +23,7 @@ export function WelcomeForm() {
 		if (usernameFromQuery) {
 			form.setValue("username", usernameFromQuery);
 		}
-	}, [searchParams]);
+	}, [searchParams, form]);
 
 	return (
 		<Form {...form}>
@@ -65,7 +65,7 @@ export function WelcomeForm() {
 									{...field}
 								/>
 							</FormControl>
-							
+
 							<FormMessage />
 						</FormItem>
 					)}

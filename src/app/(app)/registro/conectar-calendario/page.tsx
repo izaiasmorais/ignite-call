@@ -4,24 +4,14 @@ import { Button } from "@/components/ui/button";
 import { ArrowRight, LoaderCircle, LogOut } from "lucide-react";
 import { signIn, useSession, signOut } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState, useEffect } from "react";
 
 export default function ConnectCalendar() {
 	const router = useRouter();
-	const { status, data } = useSession();
+	const { status } = useSession();
 	const searchParams = useSearchParams();
-	const [isClient, setIsClient] = useState(false);
-
-	useEffect(() => {
-		setIsClient(true);
-	}, []);
 
 	const hasAuthError = !!searchParams.get("error");
 	const hasSignedIn = status === "authenticated";
-
-	if (!isClient) {
-		return null;
-	}
 
 	async function handleSignIn() {
 		await signIn("google");

@@ -10,7 +10,7 @@ export const response = {
 	},
 };
 
-export async function POST(req: Request, res: Response) {
+export async function POST(req: Request) {
 	const { name, username } = await req.json();
 
 	const isUserAlreadyRegistered = await prisma.user.findFirst({
