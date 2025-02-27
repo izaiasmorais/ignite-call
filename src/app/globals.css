@@ -56,13 +56,19 @@
 		--chart-4: 280 65% 60%;
 		--chart-5: 340 75% 55%;
 	}
-}
-
-@layer base {
 	* {
 		@apply border-border;
 	}
 	body {
 		@apply bg-background text-foreground;
+	}
+}
+
+@layer components {
+	.time-white {
+		@apply text-gray-800;
+	}
+	.time-white::-webkit-calendar-picker-indicator {
+		filter: invert(100%);
 	}
 }

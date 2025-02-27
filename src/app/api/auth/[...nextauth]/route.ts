@@ -1,6 +1,6 @@
 import { PrismaAdapter } from "@/lib/auth/prisma-adapter";
 import { env } from "@/env";
-import GoogleProvider from "next-auth/providers/google";
+import GoogleProvider, { GoogleProfile } from "next-auth/providers/google";
 import NextAuth from "next-auth";
 
 const handler = NextAuth({
@@ -14,6 +14,15 @@ const handler = NextAuth({
 					scope:
 						"https://www.googleapis.com/auth/userinfo.email https://www.googleapis.com/auth/userinfo.profile https://www.googleapis.com/auth/calendar",
 				},
+			},
+			profile(profile: GoogleProfile) {
+				return {
+					id: profile.sub,
+					name: profile.name,
+					username: "",
+					email: profile.email,
+					avatar_url: profile.picture,
+				};
 			},
 		}),
 	],

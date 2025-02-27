@@ -3,11 +3,12 @@ import { Header } from "@/components/header/header";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, LoaderCircle, LogOut } from "lucide-react";
 import { signIn, useSession, signOut } from "next-auth/react";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { useState, useEffect } from "react";
 
 export default function ConnectCalendar() {
-	const { status } = useSession();
+	const router = useRouter();
+	const { status, data } = useSession();
 	const searchParams = useSearchParams();
 	const [isClient, setIsClient] = useState(false);
 
@@ -76,7 +77,10 @@ export default function ConnectCalendar() {
 				)}
 
 				{hasSignedIn ? (
-					<Button className="bg-ignite-500 hover:bg-ignite-600">
+					<Button
+						className="bg-ignite-500 hover:bg-ignite-600"
+						onClick={() => router.push("/registro/cronograma")}
+					>
 						Próximo Passo <ArrowRight />
 					</Button>
 				) : (
