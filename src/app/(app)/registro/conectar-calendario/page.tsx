@@ -3,14 +3,12 @@ import { Header } from "@/components/header/header";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, LoaderCircle, LogOut } from "lucide-react";
 import { signIn, useSession, signOut } from "next-auth/react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 export default function ConnectCalendar() {
 	const router = useRouter();
 	const { status } = useSession();
-	const searchParams = useSearchParams();
 
-	const hasAuthError = !!searchParams.get("error");
 	const hasSignedIn = status === "authenticated";
 
 	async function handleSignIn() {
@@ -58,13 +56,6 @@ export default function ConnectCalendar() {
 						</Button>
 					)}
 				</div>
-
-				{hasAuthError && (
-					<span className="text-red-500 text-sm">
-						Falha ao se conectar ao Google, verifique se você habilitou as
-						perrmissões de acesso ao Google Calendar
-					</span>
-				)}
 
 				{hasSignedIn ? (
 					<Button

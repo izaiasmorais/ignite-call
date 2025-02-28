@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
 
-export const response = {
+const response = {
 	status(code: number) {
 		return {
 			json: (data: unknown) => NextResponse.json(data, { status: code }),
