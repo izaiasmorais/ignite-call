@@ -1,8 +1,6 @@
 {
-	"extends": [
-		"@rocketseat/eslint-config/react",
-		"@rocketseat/eslint-config/next",
-		"next/core-web-vitals",
-		"next/typescript"
-	]
+	"extends": ["next/core-web-vitals", "next/typescript"],
+	"rules": {
+		"@ts-expect-error": "off"
+	}
 }

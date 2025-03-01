@@ -1,8 +1,6 @@
 import { z } from "zod";
 import { useFormMutation } from "./use-form-mutation";
-import { convertTimeStringToMiinues } from "@/utils/conver-time-string-to-minutes";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { convertTimeStringToMinutes } from "@/utils/conver-time-string-to-minutes";
 
 const weekdays = [
 	{ id: 0, label: "Domingo" },
@@ -32,8 +30,8 @@ const timeIntervalsFormSchema = z.object({
 			return intervals.map((interval) => {
 				return {
 					weekDay: interval.weekday,
-					startTimeInMinutes: convertTimeStringToMiinues(interval.startTime),
-					endTimeInMinutes: convertTimeStringToMiinues(interval.endTime),
+					startTimeInMinutes: convertTimeStringToMinutes(interval.startTime),
+					endTimeInMinutes: convertTimeStringToMinutes(interval.endTime),
 				};
 			});
 		})
@@ -50,12 +48,13 @@ const timeIntervalsFormSchema = z.object({
 		),
 });
 
+type TimeIntervalsFormOutput = z.input<typeof timeIntervalsFormSchema>;
+
 export function useScheduleForm() {
 	const defaultWeekDays: number[] = [];
 
-	// @ts-ignore
-	const form = useFormMutation<ScheduleFormInput>({
-		// @ts-ignore
+	const form = useFormMutation<TimeIntervalsFormOutput>({
+		// @ts-expect-error: TODO
 		schema: timeIntervalsFormSchema,
 		defaultValues: {
 			schedule: weekdays.map((weekday) => ({
