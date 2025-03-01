@@ -1,5 +1,8 @@
 import { z } from "zod";
 import { useFormMutation } from "./use-form-mutation";
+import { convertTimeStringToMiinues } from "@/utils/conver-time-string-to-minutes";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 const weekdays = [
 	{ id: 0, label: "Domingo" },
@@ -11,7 +14,7 @@ const weekdays = [
 	{ id: 6, label: "Sábado" },
 ];
 
-const formSchema = z.object({
+const timeIntervalsFormSchema = z.object({
 	schedule: z
 		.array(
 			z.object({
@@ -24,13 +27,36 @@ const formSchema = z.object({
 		.transform((intervals) => intervals.filter((interval) => interval.enabled))
 		.refine((intervals) => intervals.length > 0, {
 			message: "Pelo menos um dia da semana deve ser selecionado.",
-		}),
+		})
+		.transform((intervals) => {
+			return intervals.map((interval) => {
+				return {
+					weekDay: interval.weekday,
+					startTimeInMinutes: convertTimeStringToMiinues(interval.startTime),
+					endTimeInMinutes: convertTimeStringToMiinues(interval.endTime),
+				};
+			});
+		})
+		.refine(
+			(interval) => {
+				return interval.every(
+					(interval) =>
+						interval.endTimeInMinutes - 60 >= interval.startTimeInMinutes
+				);
+			},
+			{
+				message: "O intervalo de tempo deve ser de pelo menos 1 hora.",
+			}
+		),
 });
 
 export function useScheduleForm() {
 	const defaultWeekDays: number[] = [];
-	const form = useFormMutation({
-		schema: formSchema,
+
+	// @ts-ignore
+	const form = useFormMutation<ScheduleFormInput>({
+		// @ts-ignore
+		schema: timeIntervalsFormSchema,
 		defaultValues: {
 			schedule: weekdays.map((weekday) => ({
 				weekday: weekday.id,

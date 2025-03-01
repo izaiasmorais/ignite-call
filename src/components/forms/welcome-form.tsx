@@ -10,20 +10,10 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, LoaderCircle } from "lucide-react";
-import { useSearchParams } from "next/navigation";
-import { useEffect } from "react";
 import { useRegisterUser } from "@/hooks/use-register-user";
 
 export function WelcomeForm() {
-	const searchParams = useSearchParams();
 	const { form, isLoadingRegisterUser } = useRegisterUser();
-
-	useEffect(() => {
-		const usernameFromQuery = searchParams.get("username");
-		if (usernameFromQuery) {
-			form.setValue("username", usernameFromQuery);
-		}
-	}, [searchParams, form]);
 
 	return (
 		<Form {...form}>

@@ -1,6 +1,8 @@
 {
-  "extends": [
-    "next/core-web-vitals",
-    "next/typescript"
-  ]
+	"extends": [
+		"@rocketseat/eslint-config/react",
+		"@rocketseat/eslint-config/next",
+		"next/core-web-vitals",
+		"next/typescript"
+	]
 }
