@@ -1,6 +1,8 @@
 import { z } from "zod";
 import { useFormMutation } from "./use-form-mutation";
 import { convertTimeStringToMinutes } from "@/utils/conver-time-string-to-minutes";
+import { useMutation } from "@tanstack/react-query";
+import { createTimeIntervals } from "@/api/users/time-interval";
 
 const weekdays = [
 	{ id: 0, label: "Domingo" },
@@ -48,12 +50,12 @@ const timeIntervalsFormSchema = z.object({
 		),
 });
 
-type TimeIntervalsFormOutput = z.input<typeof timeIntervalsFormSchema>;
+type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>;
 
 export function useScheduleForm() {
 	const defaultWeekDays: number[] = [];
 
-	const form = useFormMutation<TimeIntervalsFormOutput>({
+	const form = useFormMutation<TimeIntervalsFormInput>({
 		// @ts-expect-error: TODO
 		schema: timeIntervalsFormSchema,
 		defaultValues: {
@@ -65,12 +67,22 @@ export function useScheduleForm() {
 			})),
 		},
 		onSubmit: async (data) => {
-			console.log(data);
+			// @ts-expect-error: TODO
+			await createTimeIntervalsFn(data.schedule);
 		},
+	});
+
+	const {
+		mutateAsync: createTimeIntervalsFn,
+		isPending: isLoadingCreateTimeIntervals,
+	} = useMutation({
+		mutationKey: ["users", "time-interval"],
+		mutationFn: createTimeIntervals,
 	});
 
 	return {
 		form,
 		weekdays,
+		isLoadingCreateTimeIntervals,
 	};
 }
