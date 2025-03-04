@@ -3,6 +3,8 @@ import { useFormMutation } from "./use-form-mutation";
 import { convertTimeStringToMinutes } from "@/utils/conver-time-string-to-minutes";
 import { useMutation } from "@tanstack/react-query";
 import { createTimeIntervals } from "@/api/users/time-interval";
+import { toast } from "sonner";
+import { useRouter } from "next/navigation";
 
 const weekdays = [
 	{ id: 0, label: "Domingo" },
@@ -52,7 +54,8 @@ const timeIntervalsFormSchema = z.object({
 
 type TimeIntervalsFormInput = z.input<typeof timeIntervalsFormSchema>;
 
-export function useScheduleForm() {
+export function useSetTimeIntervals() {
+	const router = useRouter();
 	const defaultWeekDays: number[] = [];
 
 	const form = useFormMutation<TimeIntervalsFormInput>({
@@ -78,6 +81,14 @@ export function useScheduleForm() {
 	} = useMutation({
 		mutationKey: ["users", "time-interval"],
 		mutationFn: createTimeIntervals,
+		onSuccess: (data) => {
+			if (data.success) {
+				router.push("/registro/atualizar-perfil");
+				return;
+			}
+
+			toast.error(data.error);
+		},
 	});
 
 	return {

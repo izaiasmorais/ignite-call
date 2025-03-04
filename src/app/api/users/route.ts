@@ -22,7 +22,7 @@ export async function POST(req: Request) {
 	if (isUserAlreadyRegistered) {
 		return response.status(400).json({
 			success: false,
-			error: "User Already Registered",
+			error: "Usuário já cadastrado",
 			data: null,
 		});
 	}

@@ -60,7 +60,7 @@ export default function ConnectCalendar() {
 				{hasSignedIn ? (
 					<Button
 						className="bg-ignite-500 hover:bg-ignite-600"
-						onClick={() => router.push("/registro/cronograma")}
+						onClick={() => router.push("/registro/disponibilidade")}
 					>
 						Próximo Passo <ArrowRight />
 					</Button>

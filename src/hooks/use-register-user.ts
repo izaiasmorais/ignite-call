@@ -18,21 +18,6 @@ export const registerUserSchema = z.object({
 export function useRegisterUser() {
 	const router = useRouter();
 
-	const { mutate: registerUserFn, isPending: isLoadingRegisterUser } =
-		useMutation({
-			mutationFn: registerUser,
-			mutationKey: ["register-user"],
-			onSuccess: (data) => {
-				if (data.success) {
-					router.push("/registro/conectar-calendario");
-				}
-
-				if (data.error === "User Already Registered") {
-					toast.error("Usuário já cadastrado");
-				}
-			},
-		});
-
 	const form = useFormMutation({
 		schema: registerUserSchema,
 		defaultValues: {
@@ -46,6 +31,20 @@ export function useRegisterUser() {
 			});
 		},
 	});
+
+	const { mutateAsync: registerUserFn, isPending: isLoadingRegisterUser } =
+		useMutation({
+			mutationFn: registerUser,
+			mutationKey: ["register-user"],
+			onSuccess: (data) => {
+				if (data.success) {
+					router.push("/registro/conectar-calendario");
+					return;
+				}
+
+				toast.error(data.error);
+			},
+		});
 
 	return { form, isLoadingRegisterUser };
 }

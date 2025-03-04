@@ -5,10 +5,10 @@ import { Form, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "../ui/input";
 import { ArrowRight } from "lucide-react";
 import { Button } from "../ui/button";
-import { useScheduleForm } from "@/hooks/use-schedule-form";
+import { useSetTimeIntervals } from "@/hooks/use-set-time-intervals";
 
 export default function CheckboxTimeRange() {
-	const { form, weekdays } = useScheduleForm();
+	const { form, weekdays } = useSetTimeIntervals();
 
 	return (
 		<Form {...form}>

@@ -1,7 +1,7 @@
 import { Header } from "@/components/header/header";
 import CheckboxTimeRange from "@/components/schedule/checkbox-time-range";
 
-export default function Schedule() {
+export default function Availability() {
 	return (
 		<div className="flex flex-col gap-8">
 			<Header
