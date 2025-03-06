@@ -1,5 +1,5 @@
 import { Header } from "@/components/header/header";
-import CheckboxTimeRange from "@/components/schedule/checkbox-time-range";
+import CheckboxTimeRange from "@/components/availability/checkbox-time-range";
 
 export default function Availability() {
 	return (
