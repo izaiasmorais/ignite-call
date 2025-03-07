@@ -41,7 +41,7 @@ export default async function Schedule({
 				<span className="text-muted-foreground">{user.bio}</span>
 			</div>
 
-			<div className="bg-gray-800 p-6 flex flex-col gap-4 rounded-lg">
+			<div className="bg-gray-800 p-6 rounded-lg">
 				<ScheduleForm />
 			</div>
 		</div>
