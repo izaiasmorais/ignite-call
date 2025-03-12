@@ -42,7 +42,7 @@ export default async function Schedule({
 				<span className="text-muted-foreground">{user.bio}</span>
 			</div>
 
-			<div className="bg-gray-800 border border-gray-600 p-6 rounded-lg">
+			<div className="bg-gray-800 max-w-[824px] border border-gray-600 p-6 rounded-lg">
 				<ScheduleForm />
 				{/* <ConfirmationForm /> */}
 			</div>
