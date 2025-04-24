@@ -4,27 +4,12 @@ import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { api } from "@/lib/axios";
 import dayjs from "dayjs";
+import { getAvailability } from "@/api/users/availability";
 
-const hours = [
-	"00:00h",
-	"01:00h",
-	"02:00h",
-	"03:00h",
-	"04:00h",
-	"05:00h",
-	"06:00h",
-	"07:00h",
-	"08:00h",
-	"09:00h",
-	"10:00h",
-	"11:00h",
-	"12:00h",
-	"13:00h",
-	"14:00h",
-	"15:00h",
-	"16:00h",
-	"17:00h",
-];
+interface Availability {
+	possibleTimes: number[];
+	availableTimes: number[];
+}
 
 interface ScheduleFormProps {
 	username: string;
@@ -32,20 +17,23 @@ interface ScheduleFormProps {
 
 export function ScheduleForm({ username }: ScheduleFormProps) {
 	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-	// const [availability, setAvailability] = useState(null);
+	const [availability, setAvailability] = useState<Availability | null>(null);
 
 	useEffect(() => {
 		if (!selectedDate) {
 			return;
 		}
 
-		api
-			.get(`/users/${username}/availability`, {
-				params: {
-					date: dayjs(selectedDate).format("YYYY-MM-DD"),
-				},
-			})
-			.then((response) => console.log(response.data));
+		const handleGetAvailability = async () => {
+			const response = await getAvailability({
+				username,
+				date: dayjs(selectedDate).format("YYYY-MM-DD"),
+			});
+
+			setAvailability(response.data);
+		};
+
+		handleGetAvailability();
 	}, [selectedDate, username]);
 
 	return (
@@ -64,9 +52,13 @@ export function ScheduleForm({ username }: ScheduleFormProps) {
 					</span>
 
 					<div className="schedule-buttons flex flex-col gap-2 overflow-y-scroll">
-						{hours.map((hour) => (
-							<Button key={hour} className="bg-gray-600 hover:bg-gray-600/60">
-								{hour}
+						{availability?.possibleTimes.map((hour) => (
+							<Button
+								key={hour}
+								className="bg-gray-600 hover:bg-gray-600/60"
+								disabled={!availability?.possibleTimes.includes(hour)}
+							>
+								{String(hour).padStart(2, "0")}:00
 							</Button>
 						))}
 					</div>

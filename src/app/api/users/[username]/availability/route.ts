@@ -49,6 +49,7 @@ export async function GET(
 			success: true,
 			error: null,
 			data: {
+				possibleTimes: [],
 				availability: [],
 			},
 		});
@@ -66,6 +67,7 @@ export async function GET(
 			success: true,
 			error: null,
 			data: {
+				possibleTimes: [],
 				availability: [],
 			},
 		});
