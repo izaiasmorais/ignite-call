@@ -1,4 +1,3 @@
-import { ConfirmationForm } from "@/components/schedule/confirmation-form";
 import { ScheduleForm } from "@/components/schedule/schedule-form";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { prisma } from "@/lib/prisma";
@@ -43,8 +42,7 @@ export default async function Schedule({
 			</div>
 
 			<div className="bg-gray-800 max-w-[824px] border border-gray-600 p-6 rounded-lg">
-				<ScheduleForm />
-				{/* <ConfirmationForm /> */}
+				<ScheduleForm username={username} />
 			</div>
 		</div>
 	);

@@ -1,7 +1,9 @@
 "use client";
 import { Calendar as ShadcnCalendar } from "@/components/ui/calendar";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
+import { api } from "@/lib/axios";
+import dayjs from "dayjs";
 
 const hours = [
 	"00:00h",
@@ -24,19 +26,38 @@ const hours = [
 	"17:00h",
 ];
 
-export function ScheduleForm() {
-	const [date, setDate] = useState<Date | undefined>(undefined);
+interface ScheduleFormProps {
+	username: string;
+}
+
+export function ScheduleForm({ username }: ScheduleFormProps) {
+	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
+	// const [availability, setAvailability] = useState(null);
+
+	useEffect(() => {
+		if (!selectedDate) {
+			return;
+		}
+
+		api
+			.get(`/users/${username}/availability`, {
+				params: {
+					date: dayjs(selectedDate).format("YYYY-MM-DD"),
+				},
+			})
+			.then((response) => console.log(response.data));
+	}, [selectedDate, username]);
 
 	return (
 		<div className="h-[480px] flex gap-2">
 			<ShadcnCalendar
 				mode="single"
-				selected={date}
-				onSelect={setDate}
+				selected={selectedDate}
+				onSelect={setSelectedDate}
 				disabled={(date) => date < new Date(new Date().setHours(0, 0, 0, 0))}
 			/>
 
-			{date && (
+			{selectedDate && (
 				<div className="!w-[280px] p-1.5 flex flex-col gap-2">
 					<span className="w-full text-muted-foreground">
 						<strong className="text-white">terça-feira</strong>, 20 de setembro
