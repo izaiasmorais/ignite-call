@@ -17,7 +17,6 @@ export async function GET(
 	const resolvedParams = await params;
 	const username = resolvedParams.username;
 	const date = req.nextUrl.searchParams.get("date");
-	console.log(username);
 
 	if (!date) {
 		return response.status(404).json({
