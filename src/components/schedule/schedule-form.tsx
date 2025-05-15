@@ -5,6 +5,7 @@ import { Button } from "../ui/button";
 import { api } from "@/lib/axios";
 import dayjs from "dayjs";
 import { getAvailability } from "@/api/users/availability";
+import { useQuery } from "@tanstack/react-query";
 
 interface Availability {
 	possibleTimes: number[];
@@ -17,24 +18,20 @@ interface ScheduleFormProps {
 
 export function ScheduleForm({ username }: ScheduleFormProps) {
 	const [selectedDate, setSelectedDate] = useState<Date | undefined>(undefined);
-	const [availability, setAvailability] = useState<Availability | null>(null);
 
-	useEffect(() => {
-		if (!selectedDate) {
-			return;
-		}
+	const selectedDateWithoutTime = selectedDate
+		? dayjs(selectedDate).format("YYYY-MM-DD")
+		: null;
 
-		const handleGetAvailability = async () => {
-			const response = await getAvailability({
+	const { data: result } = useQuery({
+		queryKey: ["availability", selectedDateWithoutTime],
+		queryFn: () =>
+			getAvailability({
 				username,
-				date: dayjs(selectedDate).format("YYYY-MM-DD"),
-			});
-
-			setAvailability(response.data);
-		};
-
-		handleGetAvailability();
-	}, [selectedDate, username]);
+				date: selectedDateWithoutTime ?? "",
+			}),
+		enabled: !!selectedDateWithoutTime,
+	});
 
 	return (
 		<div className="h-[480px] flex gap-2">
@@ -52,15 +49,17 @@ export function ScheduleForm({ username }: ScheduleFormProps) {
 					</span>
 
 					<div className="schedule-buttons flex flex-col gap-2 overflow-y-scroll">
-						{availability?.possibleTimes.map((hour) => (
-							<Button
-								key={hour}
-								className="bg-gray-600 hover:bg-gray-600/60"
-								disabled={!availability?.possibleTimes.includes(hour)}
-							>
-								{String(hour).padStart(2, "0")}:00
-							</Button>
-						))}
+						{result &&
+							result.data &&
+							result.data.possibleTimes.map((hour) => (
+								<Button
+									key={hour}
+									className="bg-gray-600 hover:bg-gray-600/60"
+									disabled={!result.data.possibleTimes.includes(hour)}
+								>
+									{String(hour).padStart(2, "0")}:00
+								</Button>
+							))}
 					</div>
 				</div>
 			)}
